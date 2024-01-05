@@ -41,14 +41,22 @@ RUN pecl install xdebug-3.2.1 && \
     mkdir /var/log/xdebug
 
 # Install redis
-RUN pecl install redis-5.3.7 && \
-    docker-php-ext-enable redis
+# RUN pecl install redis-5.3.7 && \
+#     docker-php-ext-enable redis
 
 # Install imagick
 RUN apt-get update && \
     apt-get -y --no-install-recommends install --fix-missing libmagickwand-dev && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y \
+    libldap2-dev \
+    libgmp-dev \
+    libc-client-dev \
+    libkrb5-dev \
+    libxslt1-dev
+
+RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
 # Workarround until imagick is available in pecl with php8 support
 # Imagick Commit to install
 # https://github.com/Imagick/imagick
@@ -66,6 +74,39 @@ RUN cd /usr/local/src && \
     rm -rf imagick && \
     docker-php-ext-enable imagick
 
+# Install imap
+
+RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl && docker-php-ext-install imap
+
+# Install and configure some difficult PHP extensions
+# config file name is wrong and causes error on build
+RUN cd /usr/local/src && \
+    git clone https://github.com/php/php-src
+
+RUN cd /usr/local/src/php-src && \
+    git checkout PHP-8.2.1 && \
+    cd ext/openssl && \
+    mv config0.m4 config.m4 && \
+    phpize && \
+    ./configure && \
+    make && \
+    make install && \
+    cd ../.. && \
+    docker-php-ext-enable openssl
+
+RUN cd /usr/local/src/php-src && \
+    git checkout PHP-8.2.1 && \
+    cd ext/sqlite3 && \
+    mv config0.m4 config.m4 && \
+    phpize && \
+    ./configure && \
+    make && \
+    make install && \
+    cd ../.. && \
+    rm -rf php-src && \
+    docker-php-ext-enable sqlite3
+
+
 # Other PHP8 Extensions
 
 RUN docker-php-ext-install pdo_mysql && \
@@ -78,8 +119,13 @@ RUN docker-php-ext-install pdo_mysql && \
     docker-php-ext-install mbstring && \
     docker-php-ext-install gettext && \
     docker-php-ext-install calendar && \
-    docker-php-ext-install exif
-
+    docker-php-ext-install exif && \
+    docker-php-ext-install ldap && \
+    docker-php-ext-install fileinfo && \
+    docker-php-ext-install gmp && \
+    docker-php-ext-install soap && \
+    docker-php-ext-install sockets && \
+    docker-php-ext-install xsl
 
 # Install Freetype 
 RUN apt-get -y update && \
