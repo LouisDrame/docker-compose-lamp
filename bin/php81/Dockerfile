@@ -78,8 +78,16 @@ RUN docker-php-ext-install pdo_mysql && \
     docker-php-ext-install mbstring && \
     docker-php-ext-install gettext && \
     docker-php-ext-install calendar && \
-    docker-php-ext-install exif
-
+    docker-php-ext-install exif && \
+    docker-php-ext-install com_dotnet && \
+    docker-php-ext-install fileinfo && \
+    docker-php-ext-install gmp && \
+    docker-php-ext-install imap && \
+    docker-php-ext-install openssl && \
+    docker-php-ext-install soap && \
+    docker-php-ext-install sockets && \
+    docker-php-ext-install sqlite3 && \
+    docker-php-ext-install xsl
 
 # Install Freetype 
 RUN apt-get -y update && \
