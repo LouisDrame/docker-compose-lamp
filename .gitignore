@@ -1,5 +1,4 @@
 /.env
-/.vscode
 /config/initdb/*
 /config/mysql/*
 /data/*
