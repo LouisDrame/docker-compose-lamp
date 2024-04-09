@@ -12,7 +12,7 @@ This Docker project provides a flexible environment for running MariaDB, MySQL, 
 - **`config`**: Holds configuration files for Apache2, database initialization, PHP, SSL, and virtual hosts.
 - **`data`**: Reserved for data storage.
 - **`.env`**: Environment variables file template.
-For more informations about the setup core see [Lamp.md](Lamp.md)
+For more informations about the setup core see [Lamp.md](Lamp.md), this base may seem complex but it enable deep customisation and will be able to follow potential changes in the meta video stack.
 
 ## Setup & Installation
 
